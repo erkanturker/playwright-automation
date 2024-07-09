@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
+import { LoginPage } from "../pages/LoginPage";
 
 test("basic test", async ({ page }) => {
-  await page.goto("https://example.com");
-  const title = await page.title();
-  expect(title).toBe("Example Domain");
+  const loginPage = new LoginPage(page);
+  await loginPage.navigate();
+  await loginPage.fillEmailById("ben+pose@workwithloop.com");
+  await loginPage.fillPasswordById("Password123");
 });
