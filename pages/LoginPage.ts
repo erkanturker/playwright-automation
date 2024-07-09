@@ -18,10 +18,8 @@ export class LoginPage {
   }
 
   async fillPasswordById(value: string) {
-    const emailPassword = `input[type="email"]`;
-    await this.page.fill(emailPassword, value);
+    const passwordInput = `input[type="password"]`;
+    await this.page.fill(passwordInput, value);
     await this.page.locator(`text="Log in"`).click();
   }
-
-
 }
