@@ -48,6 +48,7 @@ test.describe("Asana Data-Driven Tests", () => {
         );
 
         await cardLocator.waitFor();
+        
         await expect(cardLocator).toBeVisible();
       });
     });

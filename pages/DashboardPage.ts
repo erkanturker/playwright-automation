@@ -13,15 +13,15 @@ export class DashboardPage {
 
   getColumnLocator(column: string): Locator {
     return this.page.locator(
-      `.BoardColumnHeader-headerTitle >> text="${column}"`
+      `.BoardColumnHeader-headerTitle:has-text("${column}")`
     );
   }
 
   getCardLocator(columnLocator: Locator, cardTitle: string): Locator {
     return columnLocator
-      .locator("xpath=..")
+      .locator('xpath=ancestor::div[contains(@class, "BoardColumn")]')
       .locator(
-        `.BoardColumnScrollableContainer-cardsList .BoardCard-taskName >> text="${cardTitle}"`
+        `.BoardColumnScrollableContainer-cardsList .BoardCard-taskName:has-text("${cardTitle}")`
       );
   }
 }
