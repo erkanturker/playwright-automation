@@ -4,6 +4,7 @@ import { DashboardPage } from "../pages/DashboardPage";
 
 import fs from "fs";
 
+//define test case 
 type TestCase = {
   id: number;
   name: string;
@@ -12,7 +13,7 @@ type TestCase = {
   card_title: string;
 };
 
-
+//read test file
 const testCases: TestCase[] = JSON.parse(
   fs.readFileSync("./data/testcases.json", "utf-8")
 );
@@ -21,6 +22,7 @@ test.describe("Asana Data-Driven Tests", () => {
   testCases.forEach((data) => {
     test(data.name, async ({ page }) => {
       
+      // Initialize page objects for login and dashboard
       const loginPage = new LoginPage(page);
       const dashboardPage = new DashboardPage(page);
 
