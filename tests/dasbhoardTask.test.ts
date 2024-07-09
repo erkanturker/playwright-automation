@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
+import { DashboardPage } from "../pages/DashboardPage";
+
 import fs from "fs";
 
 type TestCase = {
@@ -10,6 +12,7 @@ type TestCase = {
   card_title: string;
 };
 
+
 const testCases: TestCase[] = JSON.parse(
   fs.readFileSync("./data/testcases.json", "utf-8")
 );
@@ -17,7 +20,9 @@ const testCases: TestCase[] = JSON.parse(
 test.describe("Asana Data-Driven Tests", () => {
   testCases.forEach((data) => {
     test(data.name, async ({ page }) => {
+      
       const loginPage = new LoginPage(page);
+      const dashboardPage = new DashboardPage(page);
 
       await test.step("Login", async () => {
         await loginPage.navigate();
@@ -30,17 +35,17 @@ test.describe("Asana Data-Driven Tests", () => {
       });
 
       await test.step("Verify the card is within the right column", async () => {
-        const columnLocator = page.locator(
-          `.BoardColumnHeader-headerTitle >> text="${data.column}"`
+        const columnLocator = dashboardPage.getColumnLocator(data.column);
+
+        await expect(columnLocator).toBeVisible();
+        await columnLocator.waitFor();
+
+        const cardLocator = dashboardPage.getCardLocator(
+          columnLocator,
+          data.card_title
         );
 
-        const cardLocator = columnLocator
-          .locator(`xpath=..`)
-          .locator(
-            `.BoardColumnScrollableContainer-cardsList .BoardCard-taskName >> text="${data.card_title}"`
-          );
-
-        // Assert that the card is visible
+        await cardLocator.waitFor();
         await expect(cardLocator).toBeVisible();
       });
     });
