@@ -1,27 +1,14 @@
 import { Page, Locator } from "@playwright/test";
+import BasePage from "./BasePage";
 
-export class DashboardPage {
-  private page: Page;
+export class DashboardPage extends BasePage {
+  protected quickStatsLocators: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
+    this.quickStatsLocators = this.page.locator("div>div.row>div");
   }
 
-  async navigateToProject(leftNav: string) {
-    await this.page.click(`text=${leftNav}`);
-  }
+  getQuickStatsLocators = () => this.quickStatsLocators;
 
-  getColumnLocator(column: string): Locator {
-    return this.page.locator(
-      `.BoardColumnHeader-headerTitle:has-text("${column}")`
-    );
-  }
-
-  getCardLocator(columnLocator: Locator, cardTitle: string): Locator {
-    return columnLocator
-      .locator('xpath=ancestor::div[contains(@class, "BoardColumn")]')
-      .locator(
-        `.BoardColumnScrollableContainer-cardsList .BoardCard-taskName:has-text("${cardTitle}")`
-      );
-  }
 }

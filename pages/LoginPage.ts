@@ -1,25 +1,36 @@
-import { Page } from "playwright";
+import { Locator, Page } from "playwright";
+import BasePage from "./BasePage";
 
-export class LoginPage {
-  private page: Page;
+export default class LoginPage extends BasePage {
+  protected usernameInput: Locator;
+  protected passwordInput: Locator;
+  protected submitButton: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
+    this.usernameInput = this.page.locator(`input[name="username"]`);
+    this.passwordInput = this.page.locator('input[type="password"]');
+    this.submitButton = this.page.locator(`text='Login'`);
   }
 
-  async navigate() {
-    await this.page.goto("https://app.asana.com/-/login");
+  async login(username: string, password: string) {
+    await this.page.goto("https://comattfrontend.onrender.com/");
+    await this.usernameInput.fill(username);
+    await this.passwordInput.fill(password);
+    await this.submitButton.click();
   }
 
-  async fillEmailById(value: string) {
-    const emailInput = `input[type="email"]`;
-    await this.page.fill(emailInput, value);
-    await this.page.locator(`text="Continue"`).click();
+  async loginByAdmin() {
+    const username = process.env.ADMIN_USERNAME as string;
+    const password = process.env.ADMIN_PASSWORD as string;
+
+    await this.login(username, password);
   }
 
-  async fillPasswordById(value: string) {
-    const passwordInput = `input[type="password"]`;
-    await this.page.fill(passwordInput, value);
-    await this.page.locator(`text="Log in"`).click();
+  async loginByTeacher() {
+    const username = process.env.TEACHER_USERNAME as string;
+    const password = process.env.TEACHER_PASSWORD as string;
+
+    await this.login(username, password);
   }
 }
