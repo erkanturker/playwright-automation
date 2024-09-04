@@ -7,7 +7,8 @@ export default defineConfig({
   testDir: "./tests",
   use: {
     headless: false,
-    screenshot: "only-on-failure",
+    screenshot: { mode: "only-on-failure", fullPage: true },
+    video: { mode: "retain-on-failure", size: { width: 1920, height: 1080 } },
   },
   fullyParallel: true,
   workers: 4,

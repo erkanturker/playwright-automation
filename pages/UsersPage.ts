@@ -1,6 +1,15 @@
 import { Page, Locator } from "@playwright/test";
 import BasePage from "./BasePage";
 
+export interface User {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+}
+
 export default class UsersPage extends BasePage {
   protected usernameInput: Locator;
   protected passwordInput: Locator;
@@ -19,15 +28,17 @@ export default class UsersPage extends BasePage {
     this.roleDropDown = this.page.locator("#role");
   }
 
-  async fillCreateUserForm() {
-    await this.page.waitForSelector("#username", { state: "visible" });
-    await this.usernameInput.fill("testUsername");
-
-    await this.fillTextInputById("12345", this.passwordInput);
-    await this.fillTextInputById("FirstNameTest", this.firstNameInput);
-    await this.fillTextInputById("LastnameTest", this.lastNameInput);
-    await this.fillTextInputById("test@gmail.com", this.emailInput);
-    await this.roleDropDown.selectOption({ label: "Teacher" });
-    await this.clickSubmitButton();
+  async fillCreateUserForm(user: User) {
+    const { username, password, firstName, lastName, email, role } = user;
+    
+    {
+      await this.fillTextInputById(username, this.usernameInput);
+      await this.fillTextInputById(password, this.passwordInput);
+      await this.fillTextInputById(firstName, this.firstNameInput);
+      await this.fillTextInputById(lastName, this.lastNameInput);
+      await this.fillTextInputById(email, this.emailInput);
+      await this.roleDropDown.selectOption({ label: `${role}` });
+      await this.clickSubmitButton();
+    }
   }
 }
